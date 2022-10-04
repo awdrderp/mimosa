@@ -26,7 +26,8 @@ Package(s) created!
 ```
 
 This will generate two packages, a `mimosa-dump.sql` database dump to run in a MySQL server of your choice,
-and an `application.properties` file that you can use to configure your Mimosa settings and database configuration settings.
+and an `application.properties` file that you can use to configure your Mimosa settings and database configuration settings(spring.datasource.username
+and spring.datasource.password attributes in application.properties file).
 
 Once configuration is complete, you can start Mimosa by running the following command: `java -jar mimosa-core.jar`
 
