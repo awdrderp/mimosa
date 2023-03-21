@@ -15,6 +15,7 @@ This is an opensource core; it excludes administrative controls.
 
 ## Getting Started
 
+<b>Method 1:Jar Version</b>
 Download the latest the Mimosa release [here](https://github.com/securecoding-mimosa/mimosa-core/releases/latest).
 Place mimosa in a directory of your preference before running the following commands in a terminal.
 
@@ -39,6 +40,7 @@ Login with your newly created account and try out Mimosa.
 
 Enjoy!
 
+
 ```console
 user@mimosa:~$ java -jar mimosa-core.jar
             _
@@ -59,3 +61,24 @@ user@mimosa:~$ java -jar mimosa-core.jar
 - MySQL Server 8.x+
 - Java JRE 17.x+
 - NodeJS 14.x+ (Optional, for nodejs challenges)
+
+
+
+<br/>
+<b>Method 2:Docker File Ver </b>
+
+Download the latest Mimosa Docker release [here](https://github.com/OWASP/mimosa/releases/tag/Mimosa-V3.3.1-Docker).
+
+Ensure you have docker and docker compose installed in your machine.
+
+Run "docker compose up" in folder you unzip the files containing the yaml file.
+
+The mimosa docker image will be downloaded to your hard disk and the docker images will be setup accordingly.
+
+Access the web application by typing the url http://localhostL8080 in your preferred browser.
+
+Afterwards, you can simply register an account, selecting the first class and your account will be auto approved. 
+
+Login with your newly created account and try out Mimosa.
+
+Enjoy!
