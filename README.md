@@ -16,6 +16,7 @@ This is an opensource core; it excludes administrative controls.
 ## Getting Started
 
 <b>Method 1:Jar Version</b>
+<br/>
 Download the latest the Mimosa release [here](https://github.com/securecoding-mimosa/mimosa-core/releases/latest).
 Place mimosa in a directory of your preference before running the following commands in a terminal.
 
@@ -60,12 +61,13 @@ user@mimosa:~$ java -jar mimosa-core.jar
 
 - MySQL Server 8.x+
 - Java JRE 17.x+
-- NodeJS 14.x+ (Optional, for nodejs challenges)
+- NodeJS 14.x+
 
 
 
 <br/>
-<b>Method 2:Docker File Ver </b>
+<b>Method 2:Docker File Ver (No need to install MySQL, Java and Node JS in machine) </b>
+<br/>
 
 Download the latest Mimosa Docker release [here](https://github.com/OWASP/mimosa/releases/tag/Mimosa-V3.3.1-Docker).
 
