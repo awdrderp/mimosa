@@ -84,3 +84,9 @@ Afterwards, you can simply register an account, selecting the first class and yo
 Login with your newly created account and try out Mimosa.
 
 Enjoy!
+
+
+## Contributing 
+
+If you like to contribute to the challenge creation, please view the video tutorial at https://youtu.be/jvc9Ps0xtV0
+We welcome contributors who have new ideas and wish to contribute to Mimosa.
