@@ -89,4 +89,5 @@ Enjoy!
 ## Contributing 
 
 If you like to contribute to the challenge creation, please view the video tutorial at https://youtu.be/jvc9Ps0xtV0
+
 We welcome contributors who have new ideas and wish to contribute to Mimosa.
