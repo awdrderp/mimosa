@@ -1,5 +1,8 @@
 package securecoding.controller.template;
 
+import java.time.LocalDateTime;
+import java.time.Duration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,6 +28,7 @@ import securecoding.repository.ChallengeRepository;
 import securecoding.repository.HintRepository;
 import securecoding.util.AttemptUtil;
 import securecoding.util.HintUtil;
+import securecoding.util.StudentUtil;
 import securecoding.util.PropertiesUtil;
 import securecoding.util.UserUtil;
 import weilianglol.ixora.PageReader;
@@ -49,14 +53,14 @@ public abstract class ChallengeControllerAdapter {
 		this.challengeRepository = challengeRepository;
 		this.attemptRepository = attemptRepository;
 		this.hintRepository = hintRepository;
-		
+
 		// Grab common annotations
 		this.annotation = this.getClass().getAnnotation(ChallengeController.class);
 		this.url = annotation.value();
 
 		initChallenge();
 		initHints();
-		
+
 		// Verbose loading
 		if (PropertiesUtil.getProperty("securecoding.challenges.verbose-load").equals("true"))
 			logger.info("Challenge: " + url + " successfully loaded");
@@ -86,7 +90,7 @@ public abstract class ChallengeControllerAdapter {
 			// Set Up Challenge
 			challenge = new Challenge(url, title, description, points, difficulty, category);
 		}
-		
+
 		// Save Challenge
 		challengeRepository.saveAndFlush(challenge);
 	}
@@ -105,7 +109,7 @@ public abstract class ChallengeControllerAdapter {
 				String hintDescription = hintFragment.getElementsByClass("hint").get(0).text();
 				int cost = Integer.parseInt(hintFragment.getElementsByClass("cost").get(0).text());
 				int priority = Integer.parseInt(hintFragment.getElementsByClass("priority").get(0).text());
-				
+
 				Hint hint = hintRepository.findByUrl(url + "/" + priority);
 				if (hint != null) {
 					// Update Hint
@@ -128,8 +132,9 @@ public abstract class ChallengeControllerAdapter {
 		Challenge challenge = challengeRepository.findByUrl(url);
 		Attempt attempt = attemptRepository.findByUserAndChallenge(user, challenge);
 
-		if (user.getRole().equals(Roles.STUDENT) && challengeRepository.findByUrlAndBatches_students(url, user) == null)
-			return "error";
+		if (user.getRole().equals(Roles.STUDENT) && challengeRepository.findByUrlAndBatches_students(url, user) == null
+				&& !user.getQuiz().getQuestions().contains(challengeRepository.findByUrl(url)))
+			return "pages/error";
 
 		model.addAttribute("attempt", attempt);
 		model.addAttribute("challenge", challenge);
@@ -142,8 +147,18 @@ public abstract class ChallengeControllerAdapter {
 		Challenge challenge = challengeRepository.findByUrl(url);
 		Attempt attempt = new Attempt(user, challenge);
 
-		if (user.getRole().equals(Roles.STUDENT) && challengeRepository.findByUrlAndBatches_students(url, user) == null)
+		if (user.getRole().equals(Roles.STUDENT) && challengeRepository.findByUrlAndBatches_students(url, user) == null
+				&& !user.getQuiz().getQuestions().contains(challengeRepository.findByUrl(url)))
 			return ResponseEntity.badRequest().body(null);
+
+		// Checks if the lobby(test) has been expired or if the duration of the test/lobby is over(the student has ran out of time to do the test)
+		if (user.getQuiz() != null && (user.getQuiz().getExpire().isBefore(LocalDateTime.now()) || 
+			StudentUtil.findStudent(user).getDatetime_joined().plus(Duration.ofSeconds(user.getQuiz().getDuration())).isBefore(LocalDateTime.now()))) {
+			System.out.println("Lobby expire");
+			Message message = new Message();
+			message.setType("Redirect");
+			return ResponseEntity.badRequest().body(message);
+		}
 
 		try {
 			// Grade and update
@@ -163,18 +178,18 @@ public abstract class ChallengeControllerAdapter {
 
 		return ResponseEntity.ok().body(attempt);
 	}
-	
+
 	@RequestMapping(path = "/hint", method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity<Hint> getHint(HttpServletRequest request) {
 		User user = UserUtil.getCurrentUser();
 		Challenge challenge = challengeRepository.findByUrl(url);
 		Hint hint = HintUtil.getNextLockedHint(challenge, user);
-		
+
 		// Allowing negative scoring
-		if (hint != null /*&& user.getPoints() >= hint.getCost()*/) {
+		if (hint != null /* && user.getPoints() >= hint.getCost() */) {
 			hint.getUsers().add(user);
 			hintRepository.saveAndFlush(hint);
-			
+
 			return ResponseEntity.ok().body(hint);
 		} else {
 			// Invalid hint request

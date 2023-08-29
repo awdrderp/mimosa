@@ -42,12 +42,18 @@ public class Challenge {
 			@JoinColumn(name = "batch") })
 	@JsonManagedReference
 	private Set<Batch> batches;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "questions", joinColumns = { @JoinColumn(name = "challenge") }, inverseJoinColumns = {
+			@JoinColumn(name = "quiz") })
+	@JsonManagedReference
+	private Set<Quiz> quizzes;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge")
 	@JsonManagedReference
 	private Set<Attempt> attempts;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge")
 	@JsonManagedReference
 	private Set<Hint> hints;
+
 
 	public Challenge(String url, String title, String description, int points, String difficulty, String category) {
 		this.url = url;
@@ -60,6 +66,7 @@ public class Challenge {
 		this.createdOn = new Date();
 
 		this.batches = new HashSet<>();
+		this.quizzes = new HashSet<>();
 		this.attempts = new HashSet<>();
 		this.hints = new HashSet<>();
 	}

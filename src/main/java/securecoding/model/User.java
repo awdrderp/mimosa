@@ -51,6 +51,10 @@ public class User {
 	@JoinColumn(name = "batch")
 	@JsonBackReference
 	private Batch batch;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "quiz")
+	@JsonBackReference
+	private Quiz quiz;
 	@OneToMany(mappedBy = "lecturer", fetch = FetchType.LAZY)
 	@JsonBackReference
 	private Set<Batch> teachingGroups;
@@ -74,7 +78,7 @@ public class User {
 	}
 
 	public User(String username, String password, String firstName, String lastName, boolean enabled, String role,
-			String email, String adminNo, Batch batch) {
+			String email, String adminNo, Batch batch, Quiz quiz) {
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
@@ -86,6 +90,7 @@ public class User {
 
 		this.createdOn = new Date();
 		this.batch = batch;
+		this.quiz = quiz;
 
 		this.teachingGroups = new HashSet<>();
 		this.notices = new HashSet<>();
@@ -95,11 +100,11 @@ public class User {
 
 	public User(String username, String password, String firstName, String lastName, String email, String adminNo,
 			Batch batch) {
-		this(username, password, firstName, lastName, true, Roles.STUDENT, email, adminNo, batch);
+		this(username, password, firstName, lastName, true, Roles.STUDENT, email, adminNo, batch, null);
 	}
 
 	public User(String username, String password, String firstName, String lastName, String role, String email) {
-		this(username, password, firstName, lastName, true, role, email, null, null);
+		this(username, password, firstName, lastName, true, role, email, null, null, null);
 	}
 
 	public int getPoints() {

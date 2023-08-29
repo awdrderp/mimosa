@@ -137,6 +137,25 @@ CREATE TABLE `contracts` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `games`
+--
+
+DROP TABLE IF EXISTS `games`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `games` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lobby` int(6) NOT NULL,
+  `challenge` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `games.lobbies.fk_idx` (`lobby`),
+  KEY `games.challenge.fk_idx` (`challenge`),
+  CONSTRAINT `games.lobbies.fk` FOREIGN KEY (`lobby`) REFERENCES `lobbies` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `games.challenge.fk` FOREIGN KEY (`challenge`) REFERENCES `challenges` (`url`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `hints`
 --
 
@@ -156,6 +175,26 @@ CREATE TABLE `hints` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `lobbies`
+--
+
+DROP TABLE IF EXISTS `lobbies`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lobbies` (
+  `code` int(6) NOT NULL,
+  `year` varchar(45) NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `lecturer` varchar(45) DEFAULT NULL,
+  `duration` int(10) NOT NULL,
+  `expire` datetime NOT NULL,
+  PRIMARY KEY (`code`),
+  KEY `lobbies.lecturer.fk_idx` (`lecturer`),
+  CONSTRAINT `lobbies.lecturer.fk` FOREIGN KEY (`lecturer`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `notices`
 --
 
@@ -172,6 +211,26 @@ CREATE TABLE `notices` (
   KEY `notice.user.fk_idx` (`user`),
   CONSTRAINT `notice.user.fk` FOREIGN KEY (`user`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `players`
+--
+
+DROP TABLE IF EXISTS `students`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `students` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `quiz` varchar(45) NOT NULL,
+  `user` varchar(45) NOT NULL,
+  `datetime_joined` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `players.lobbies.fk_idx` (`code`),
+  KEY `players.user.fk_idx` (`user`),
+  CONSTRAINT `players.lobbies.fk` FOREIGN KEY (`code`) REFERENCES `lobbies` (`code`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `players.user.fk` FOREIGN KEY (`user`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -213,13 +272,16 @@ CREATE TABLE `users` (
   `created_on` datetime DEFAULT CURRENT_TIMESTAMP,
   `last_login` datetime DEFAULT NULL,
   `batch` int(11) DEFAULT NULL,
+  `lobby` int(6) DEFAULT NULL,
   `verified` tinyint(1) NOT NULL DEFAULT '0',
   `uuid` char(36) DEFAULT NULL,
   PRIMARY KEY (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `admin_no_UNIQUE` (`admin_no`),
   KEY `user.batch.fk_idx` (`batch`),
-  CONSTRAINT `user.batch.fk` FOREIGN KEY (`batch`) REFERENCES `batches` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `user.lobby.fk_idx` (`lobby`),
+  CONSTRAINT `user.batch.fk` FOREIGN KEY (`batch`) REFERENCES `batches` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `user.lobby.fk` FOREIGN KEY (`lobby`) REFERENCES `lobbies` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

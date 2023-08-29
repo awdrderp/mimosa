@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <!--/* Custom Meta CSS */-->
+    <object th:remove="tag" th:include="fragments/custom :: meta-css"></object>
+</head>
+
+<body>
+    <!--/* Include navbar */-->
+    <object th:remove="tag" th:include="fragments/custom :: navbar"></object>
+
+    <!--/* Challenge Wrapping */-->
+    <object th:remove="tag" th:include="fragments/challenge :: challenge">
+
+        <div th:fragment="title">NRIC number Validation</div>
+        <div th:fragment="description">
+            <p>To counter the problem of users inputting fake NRIC numbers when signing up, some websites implement NRIC number validation.</p>
+            <p>Using regex, validate Singaporean NRIC numbers.</p>
+            <p>If it is an valid NRIC, respond with a status code of 200 and a message "valid NRIC", else respond with a status code of 403, with a message "invalid NRIC".</p>
+        </div>
+
+        <div th:fragment="task">
+            <pre id="editor" class="editor-javascript">const express = require('express');
+const router = express.Router();
+
+router.post('/', function (req, res) {
+    var input = req.body.input;
+    var pattern = new RegExp('');
+
+
+});
+
+module.exports = router;
+</pre>
+            <form class="persistent-form" th:action="@{__${#httpServletRequest.requestURI}__}" method="post"
+                enctype="application/x-www-form-urlencoded" data-control="default_challenge">
+                <input type="hidden" name="code" />
+                <input class="btn btn-default" type="submit" value="Submit" />
+            </form>
+        </div>
+
+        <div th:fragment="points">15</div>
+        <div th:fragment="category">Regex</div>
+        <div th:fragment="difficulty">Intermediate</div>
+        <div th:fragment="hints">
+            <div>
+              <p class="hint">
+                You can use regex101 to test out your regex.
+              </p>
+              <span class="cost">0</span> <span class="priority">1</span>
+            </div>
+          </div>
+    </object>
+
+    <!--/* Custom JS */-->
+    <object th:remove="tag" th:include="fragments/custom :: js"></object>
+</body>
+
+</html>

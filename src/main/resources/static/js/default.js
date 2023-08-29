@@ -46,7 +46,11 @@ function default_challenge_success(response) {
 }
 
 function default_challenge_error(response) {
-	if (response.type === "Compilation") {
+	if (response.type === "Redirect"){
+		sessionStorage.setItem("lobby_expired", true)
+		window.location.replace("/");
+	}
+	else if (response.type === "Compilation") {
 		$("#output").html(response.exception.message);
 
 		$.notify({

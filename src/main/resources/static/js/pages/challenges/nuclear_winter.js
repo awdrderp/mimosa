@@ -9,5 +9,6 @@ function nuclear_code_error(response) {
 }
 
 function nuclear_code_postfilter(form) {
+	console.log('form clear');
 	form.reset();
 }

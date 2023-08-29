@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+	<!--/* Custom Meta CSS */-->
+	<object th:remove="tag" th:include="fragments/custom :: meta-css"></object>
+</head>
+
+<body>
+	<!--/* Include navbar */-->
+	<object th:remove="tag" th:include="fragments/custom :: navbar"></object>
+
+	<!--/* User Statistics */-->
+	<div id="page-wrapper">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Assignments</h1>
+			</div>
+		</div>
+		<div class="row statistics">
+			<div class="col-lg-9">
+
+				<!--/* Challenges */-->
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<i class="fa fa-cogs fa-fw"></i> Challenges
+					</div>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered data-table link">
+								<thead>
+									<tr>
+										<th>Url</th>
+										<th>Title</th>
+										<th>Max Points</th>
+										<th>Difficulty</th>
+										<th>Category</th>
+										<th>Assigned</th>
+									</tr>
+								</thead>
+								<tbody>
+									<th:block th:each="category : ${challengesMap.keySet()}">
+										<tr th:each="challenge : ${challengesMap['__${category}__']}">
+											<td><a th:href="${challenge.url}" th:text="${challenge.url}">url</a></td>
+											<td th:text="${challenge.title}">title</td>
+											<td th:text="${challenge.points}">points</td>
+											<td th:text="${challenge.difficulty}">difficulty</td>
+											<td th:text="${challenge.category}">category</td>
+											<td>
+												<div class="checkbox checkbox-slider--b-flat">
+													<form method="POST"
+														th:action="@{/multiplayer/{id}/questions(id=${quiz.code})}"
+														enctype="application/x-www-form-urlencoded"
+														data-control="assign_challenge">
+														<input type="hidden" th:value="${challenge.url}" name="url" />
+														<label><input type="checkbox" th:checked="${T(securecoding.util.ChallengeUtil)
+															.getChallenge(challenge.url,quiz)}" class="challenge-checkbox" /> <span></span> </label>
+													</form>
+												</div>
+											</td>
+										</tr>
+									</th:block>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!--/* Information */-->
+			<div class="col-lg-3">
+
+				<!--/* General Information */-->
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<i class="fa fa-info fa-fw"></i> General Information
+					</div>
+					<div class="panel-body">
+						<p>
+							<strong>Quiz Code:</strong> <span class="pull-right" th:text="${quiz.code}">Quiz Code</span>
+						</p>
+						<p>
+							<strong>Year:</strong> <span class="pull-right" th:text="${quiz.year}">Year</span>
+						</p>
+						<p>
+							<strong>Lecturer:</strong> <span class="pull-right" th:if="${quiz.lecturer}" th:text="${quiz.lecturer.firstName} + ' '
+									 + ${quiz.lecturer.lastName}">Lecturer</span>
+							<span class="pull-right" th:unless="${quiz.lecturer}">Lecturer</span>
+						</p>
+						<p>
+							<strong>Students:</strong> <span class="pull-right"
+								th:text="${quiz.students.size()}">0</span>
+						</p>
+						<p>
+							<strong>Questions:</strong> <span class="pull-right"
+								th:text="${quiz.questions.size()}">0</span>
+						</p>
+						<div>
+							<strong>Enabled:</strong>
+							<div class="pull-right checkbox checkbox-slider--b-flat">
+								<form method="POST" th:action="@{/multiplayer/{id}/questions/enable(id=${quiz.code})}"
+									enctype="application/x-www-form-urlencoded" data-control="enable_quiz">
+									<label>
+										<input type="checkbox" th:checked="${quiz.isEnabled}"
+											class="challenge-checkbox" />
+										<span></span>
+									</label>
+
+								</form>
+							</div>
+						</div>
+						<div>
+							<strong>Quiz Code</strong>
+							<form th:action="@{/multiplayer/{id}/questions/change-code(id=${quiz.code})}" method="post"
+								enctype="application/x-www-form-urlencoded" data-control="change_code">
+								<div class="form-row">
+									<div class="col-sm-7">
+										<input class="form-control form-control-sm" type="text"
+											th:value="${quiz.getCode()}" pattern="[a-zA-Z0-9]{6,45}" name="quizCode"/>
+									</div>
+									<div class="col-sm-5">
+										<button class="form-control btn btn-default btn-sm pull-right"
+											type="submit">Change</button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div>
+							<strong>Year</strong>
+							<form th:action="@{/multiplayer/{id}/questions/change-year(id=${quiz.code})}" method="post"
+								enctype="application/x-www-form-urlencoded" data-control="change_year">
+								<div class="form-row">
+									<div class="col-sm-7">
+										<input class="form-control form-control-sm" type="text"
+											th:value="${quiz.getYear()}" name="year"/>
+									</div>
+									<div class="col-sm-5">
+										<button class="form-control btn btn-default btn-sm pull-right"
+											type="submit">Change</button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div>
+							<strong>Duration</strong>
+							<form th:action="@{/multiplayer/{id}/questions/change-duration(id=${quiz.code})}" method="post"
+								enctype="application/x-www-form-urlencoded" data-control="change_duration">
+								<div class="form-row">
+									<div class="col-sm-7">
+										<input class="form-control form-control-sm" type="text" placeholder="00:00:00" th:with="s=${quiz.getDuration()}"
+											th:value="${T(java.lang.String).format('%02d:%02d:%02d', s / 3600, (s % 3600) / 60, (s % 60))}" name="duration"/>
+									</div>
+									<div class="col-sm-5">
+										<button class="form-control btn btn-default btn-sm pull-right"
+											type="submit">Change</button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div>
+							<strong>Expire</strong>
+							<form th:action="@{/multiplayer/{id}/questions/change-expire(id=${quiz.code})}" method="post"
+								enctype="application/x-www-form-urlencoded" data-control="change_expire">
+								<div class="form-row">
+									<div class="col-sm-7">
+										<input class="form-control form-control-sm" type="datetime-local"
+											th:value="${quiz.getExpire()}" name="expire"/>
+									</div>
+									<div class="col-sm-5">
+										<button class="form-control btn btn-default btn-sm pull-right"
+											type="submit">Change</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--/* Custom JS */-->
+	<object th:remove="tag" th:include="fragments/custom :: js"></object>
+	<script src="/js/pages/multiplayer/questions.js" th:src="@{/js/pages/multiplayer/questions.js}"></script>
+</body>
+
+</html>

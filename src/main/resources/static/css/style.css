@@ -35,6 +35,10 @@ body {
 	color: #F2F1EF;
 }
 
+.navbar p.timer{
+	color: #F2F1EF;
+}
+
 .navbar-brand span {
 	color: #87D37C;
 	display: inline-block;

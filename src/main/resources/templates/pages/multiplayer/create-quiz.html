@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <!--/* Custom Meta CSS */-->
+    <object th:remove="tag" th:include="fragments/custom :: meta-css"></object>
+</head>
+
+<body>
+    <!--/* Include navbar */-->
+    <object th:remove="tag" th:include="fragments/custom :: navbar"></object>
+
+    <!--/* Page Content */-->
+    <div id="page-wrapper">
+        <!-- Create lobby pop up -->
+        <div class="create_lobby">
+            <div class="content">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Multiplayer</h1>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Description
+            </div>
+            <div class="panel-body">
+                <p>this is the description</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md">
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        Create Lobby
+                    </div>
+                    <div class="panel-body">
+                        <form th:action="@{/multiplayer/quiz/create}" method="post"
+                            enctype="application/x-www-form-urlencoded" data-control="create_quiz">
+                            <div class="form-group form-group-sm">
+                                <small class="wrong-password"></small>
+                            </div>
+                            <div class="form-group from-group-sm label">Quiz Code</div>
+                            <div class="form-group form-group-sm">
+                                <input class="form-control" required placeholder="Quiz Code" name="quizCode" type="text" pattern="[a-zA-Z0-9]{6,45}" title="Quiz code can only be alphanumeric, no special characters and should be at least 6 characters long."/>
+                            </div>
+                            <div class="form-group from-group-sm label">Year</div>
+                            <div class="form-group form-group-sm">
+                                <input class="form-control" required value="AY23/24" name="year" type="text">
+                            </div>
+                            <div class="form-group from-group-sm label">Test Duration (HH:MM:SS:MS)</div>
+                            <div class="form-group form-group-sm">
+                                <input class="form-control" placeholder="HH:MM:SS" value="00:00:00" type="text" required name="duration"
+                                    pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}" title="Write a duration in the format hh:mm:ss">
+                            </div>
+                            <div class="form-group from-group-sm label">Test Expire Date and Time</div>
+                            <div class="form-group form-group-sm">
+                                <input class="form-control" required name="expire" type="datetime-local">
+                            </div>
+
+                            <button class="btn btn-default btn-sm pull-right" type="submit">Create</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--/* Custom JS */-->
+    <object th:remove="tag" th:include="fragments/custom :: js"></object>
+    <script src="/js/pages/multiplayer/quiz.js" th:src="@{/js/pages/multiplayer/quiz.js}"></script>
+    <!-- <script src="/js/pages/dashboard.js" th:src="@{/js/pages/dashboard.js}"></script> -->
+</body>
+
+</html>

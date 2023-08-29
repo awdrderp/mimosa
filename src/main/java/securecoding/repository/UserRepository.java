@@ -35,4 +35,9 @@ public interface UserRepository extends JpaRepository<User, String> {
 		return findAll().stream().sorted((a, b) -> b.getPoints() - a.getPoints()).collect(Collectors.toList());
 	}
 
+	public default List<User> findByBatchAndPointsLessThan(Batch batch, int points) {
+		List<User> users = findByBatch(batch);
+		return users.stream().filter(u -> u.getPoints() < points).collect(Collectors.toList());
+	}
+
 }
